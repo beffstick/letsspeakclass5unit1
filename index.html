@@ -64,6 +64,7 @@
             align-items: center;
             justify-content: center;
             border-radius: 0.5rem;
+            overflow: hidden; /* Mencegah gambar keluar dari kartu */
         }
         .match-card-front {
             background-color: #fbbf24; /* Amber */
@@ -184,11 +185,11 @@
                 'game1': {
                     title: 'Sort Fruits & Veggies',
                     description: 'Click "Fruit" or "Vegetable" to sort the item.',
-                    // REVISI: Mengganti semua placeholder dengan gambar baru dari daftar Anda
+                    // REVISI: Menggunakan semua 18 item dengan gambar yang Anda berikan
                     items: [
                         { name: 'Papaya', type: 'fruit', img: 'https://www.dreamfoodscaribe.com/wp-content/uploads/2024/07/papaya-fruit.webp' },
                         { name: 'Guava', type: 'fruit', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Guava_pink_fruit.jpg/1024px-Guava_pink_fruit.jpg' },
-                        { name: 'Mangosteen', type: 'fruit', img: 'https://cdn.wikifarmer.com/images/detailed/2024/09/art-rach-PU-WX8hdiqw-unsplash.jpg' },
+                        { name: 'Mangosteen', type: 'fruit', img: 'https://cdn.wikifarmer.com/images/detailed/2024/09/art-rachen-PU-WX8hdiqw-unsplash.jpg' },
                         { name: 'Starfruit', type: 'fruit', img: 'https://www.marthastewart.com/thmb/Sgnte8iP-m4nUdSIfKn2kNIATEU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/ms-star-fruit-getty-70039cdd11624035905ba762496d8c46.jpg' },
                         { name: 'Durian', type: 'fruit', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Durian_in_black.jpg/500px-Durian_in_black.jpg' },
                         { name: 'Grapes', type: 'fruit', img: 'https://www.dole.com/sites/default/files/styles/1536w1152h-webp-80/public/media/2025-01/grapes.png.webp?itok=MbhPS0lY-i-Z20nmp-q-62nS8A' },
@@ -207,33 +208,25 @@
                     ]
                 },
                 'game2': {
-                    title: 'Match Picture & Word',
-                    description: 'Flip the cards and find the matching pairs.',
-                    // REVISI: Mengganti 4 pasang gambar dengan gambar baru dari daftar Anda
-                    items: [ 
-                        { id: 1, type: 'img', content: 'https://www.dreamfoodscaribe.com/wp-content/uploads/2024/07/papaya-fruit.webp', pairId: 1 },
-                        { id: 2, type: 'text', content: 'Papaya', pairId: 1 },
-                        { id: 3, type: 'img', content: 'https://cdn.grid.id/crop/0x0:0x0/700x465/photo/2023/01/15/cabaijpg-20230115120919.jpg', pairId: 2 },
-                        { id: 4, type: 'text', content: 'Chili', pairId: 2 },
-                        { id: 5, type: 'img', content: 'https://i5.walmartimages.com/seo/Russet-Baking-Potatoes-Whole-Fresh-Each_c638c006-a982-48f7-aa33-6d3a8dc2983c.8fd015937ebfdd46c8fcb6177d0d1b1d.jpeg?odnHeight=573&odnWidth=573&odnBg=FFFFFF', pairId: 3 },
-                        { id: 6, type: 'text', content: 'Potato', pairId: 3 },
-                        { id: 7, type: 'img', content: 'https://www.dole.com/sites/default/files/styles/1536w1152h-webp-80/public/media/2025-01/grapes.png.webp?itok=MbhPS0lY-i-Z20nmp-q-62nS8A', pairId: 4 },
-                        { id: 8, type: 'text', content: 'Grapes', pairId: 4 },
-                    ]
+                    title: 'Match Picture & Word (4x4)',
+                    description: 'Flip cards to find 8 matching pairs. Randomized!',
+                    // REVISI: items dikosongkan, akan diisi secara dinamis oleh loadVocabularyGame2()
+                    items: [] 
                 },
                 'game3': {
                     title: 'Type the Word',
                     description: 'Look at the image and type the correct English word.',
-                    // REVISI: Mengganti 5 gambar dan jawaban dengan URL yang Anda berikan
+                    // REVISI: Menggunakan 5 gambar pertama dari daftar Anda
                     items: [
                         { img: 'https://www.dreamfoodscaribe.com/wp-content/uploads/2024/07/papaya-fruit.webp', answer: 'papaya' },
                         { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Guava_pink_fruit.jpg/1024px-Guava_pink_fruit.jpg', answer: 'guava' },
                         { img: 'https://cdn.wikifarmer.com/images/detailed/2024/09/art-rachen-PU-WX8hdiqw-unsplash.jpg', answer: 'mangosteen' },
                         { img: 'https://www.marthastewart.com/thmb/Sgnte8iP-m4nUdSIfKn2kNIATEU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/ms-star-fruit-getty-70039cdd11624035905ba762496d8c46.jpg', answer: 'starfruit' },
-                        { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Durian_in_black.jpg/500px-Durian_in_black.jpg', answer: 'durian' }
+                        { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Durian_in_black.jpg/500px-Durian_in_black.jpg', answer: 'durian' },
+                        { img: 'https://lettuceinfo.org/wp-content/uploads/2020/09/Spinach.jpg', answer: 'spinach' },
+                        { img: 'https://i5.walmartimages.com/seo/Russet-Baking-Potatoes-Whole-Fresh-Each_c638c006-a982-48f7-aa33-6d3a8dc2983c.8fd015937ebfdd46c8fcb6177d0d1b1d.jpeg?odnHeight=573&odnWidth=573&odnBg=FFFFFF', answer: 'potato' }
                     ]
                 },
-                // REVISI: Menambahkan Game 4 untuk Kosakata
                 'game4': {
                     title: 'Dialogue: Fill the Blank',
                     description: 'Read the dialogue and type the missing vocabulary word.',
@@ -250,7 +243,6 @@
                 'game1': {
                     title: 'Singular or Plural?',
                     description: 'Choose the correct form of the word to complete the sentence.',
-                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
                     items: [
                         { question: 'I have one ___', options: ['papaya', 'papayas'], answer: 'papaya' },
                         { question: 'She needs two ___', options: ['potato', 'potatoes'], answer: 'potatoes' },
@@ -263,7 +255,6 @@
                 'game2': {
                     title: 'Like or Likes?',
                     description: 'Complete the sentence with "like" or "likes".',
-                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
                     items: [
                         { question: 'I ___ guavas.', options: ['like', 'likes'], answer: 'like' },
                         { question: 'He ___ spinach.', options: ['like', 'likes'], answer: 'likes' },
@@ -276,7 +267,6 @@
                 'game3': {
                     title: 'Fill in the Blank (S/Plural)',
                     description: 'Type the correct form of the word in parentheses.',
-                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
                     items: [
                         { question: 'I need two (potato).', answer: 'potatoes' },
                         { question: 'She wants one (guava).', answer: 'guava' },
@@ -285,7 +275,6 @@
                         { question: 'I see a (mangosteen).', answer: 'mangosteen' }
                     ]
                 },
-                // REVISI: Menambahkan Game 4 untuk Tata Bahasa
                 'game4': {
                     title: 'Dialogue: Grammar Quiz',
                     description: 'Choose the correct grammar to complete the dialogue.',
@@ -321,7 +310,6 @@
                 'game1': {
                     title: 'Shopping List Quantifiers',
                     description: 'Choose the correct quantifier.',
-                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
                     items: [
                         { question: 'A ___ of spinach.', options: ['kilogram', 'bunch', 'pack'], answer: 'bunch' },
                         { question: 'Two ___ of potatoes.', options: ['kilograms', 'bunch', 'pack'], answer: 'kilograms' },
@@ -332,7 +320,6 @@
                 'game2': {
                     title: 'Complete the Dialogue',
                     description: 'Choose the correct response to complete the market dialogue.',
-                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
                     items: [
                         {
                             context: 'Seller: "Hello, can I help you?"<br>Buyer: "Yes, please. I want ___." ',
@@ -354,7 +341,6 @@
                 'game3': {
                     title: 'Fill in the Blank (Units)',
                     description: 'Type the correct unit: a __ of... (bunch, kilogram, pack).',
-                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
                     items: [
                         { question: 'A ___ of spinach.', answer: 'bunch' },
                         { question: 'A ___ of potatoes.', answer: 'kilogram' },
@@ -362,7 +348,6 @@
                         { question: 'I want a ___ of pineapples, please.', answer: 'kilogram' }
                     ]
                 },
-                // REVISI: Menambahkan Game 4 untuk Menulis
                 'game4': {
                     title: 'Dialogue: Write the Line',
                     description: 'Read the prompt and type the correct sentence.',
@@ -389,7 +374,6 @@
                 'game1': {
                     title: 'Reading Price Tags',
                     description: 'Look at the price tag, then answer the question.',
-                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
                     items: [
                         { 
                             context: '<div class="bg-yellow-200 border-2 border-yellow-400 p-4 rounded-lg text-center"><h4 class="text-xl font-bold">FRESH POTATOES</h4><p class="text-3xl font-bold text-red-600">Rp 12.000 / kg</p></div>',
@@ -405,7 +389,6 @@
                         }
                     ]
                 },
-                // REVISI: Menambahkan 'game2' dan 'game3' yang hilang untuk Literasi
                 'game2': {
                     title: 'Order the Dialogue',
                     description: 'Click the sentences below to put them in the correct order.',
@@ -514,7 +497,7 @@
             }
             title.innerText = focusTitle;
             
-            // REVISI: Buat tombol untuk 4 permainan
+            // REVISI: Buat tombol untuk 4 permainan dalam grid 2x2
             container.innerHTML = `
                 <button onclick="startGame('${focus}', 'game1')" class="game-card ${cardColor} text-white p-6 rounded-lg shadow-lg text-left">
                     <div class="game-card-content">
@@ -537,7 +520,6 @@
                     </div>
                     <p class="text-sm opacity-90 mt-2">${focusData.game3.description}</p>
                 </button>
-                <!-- Tombol Game 4 Baru -->
                 <button onclick="startGame('${focus}', 'game4')" class="game-card bg-purple-600 text-white p-6 rounded-lg shadow-lg text-left">
                     <div class="game-card-content">
                         <h3 class="text-xl font-bold">Game 4 (Dialogue):</h3>
@@ -578,14 +560,14 @@
         function startGame(focus, gameType) {
             selectedGameType = gameType;
             // REVISI: Logika randomisasi yang lebih baik untuk replayability
-            // Mengacak data permainan jika perlu
-            if (`${focus}-${gameType}` !== 'literasi-game2') { // Jangan acak game susun dialog
+            if (`${focus}-${gameType}` !== 'literasi-game2' && `${focus}-${gameType}` !== 'kosakata-game2') { 
                 // Buat salinan acak dari data untuk memastikan permainan selalu baru
                 currentGameData = [...allGameData[focus][gameType].items].sort(() => Math.random() - 0.5);
-            } else {
+            } else if (`${focus}-${gameType}` === 'literasi-game2') {
                 // Untuk game susun dialog, jangan acak urutan soal (jika ada > 1)
                 currentGameData = allGameData[focus][gameType].items;
             }
+            // `kosakata-game2` akan ditangani secara khusus di dalam function-nya
             
             currentQuestionIndex = 0;
             score = 0;
@@ -596,29 +578,24 @@
                     loadVocabularyGame1();
                     break;
                 case 'kosakata-game2':
-                    loadVocabularyGame2();
+                    loadVocabularyGame2(); // Fungsi baru yang dirombak
                     break;
                 case 'tata-bahasa-game1':
                 case 'tata-bahasa-game2':
                 case 'menulis-game1':
                 case 'menulis-game2':
                 case 'literasi-game1':
-                // REVISI: Tambahkan game kuis baru ke loader
                 case 'tata-bahasa-game4':
                 case 'literasi-game4':
                     loadQuizGame(); // Banyak game berbagi struktur kuis yang sama
                     break;
-                // REVISI: Memastikan 'literasi-game2' memanggil fungsi yang benar
                 case 'literasi-game2':
                     loadLiteracyGame2();
                     break;
-                // Kasus baru untuk game 3 (mengetik)
                 case 'kosakata-game3':
                 case 'tata-bahasa-game3':
                 case 'menulis-game3':
-                // REVISI: Memastikan 'literasi-game3' memanggil fungsi yang benar
                 case 'literasi-game3':
-                // REVISI: Tambahkan game mengetik baru ke loader
                 case 'kosakata-game4':
                 case 'menulis-game4':
                     loadTypingGame();
@@ -643,7 +620,7 @@
                 <h3 class="text-2xl font-bold mb-2">${data.title}</h3>
                 <p class="text-gray-600 mb-4">${data.description}</p>
                 <div class="text-center">
-                    <img src="${item.img}" alt="${item.name}" class="mx-auto rounded-lg shadow-md mb-4 w-40 h-40 object-cover">
+                    <img src="${item.img}" alt="${item.name}" class="mx-auto rounded-lg shadow-md mb-4 w-40 h-40 object-cover" onerror="this.src='https://placehold.co/150x150/cccccc/ffffff?text=Image+Error'; this.onerror=null;">
                     <p class="text-xl font-semibold mb-4">This is "${item.name}"</p>
                     <p class="mb-4">What group is it in?</p>
                     <div class="flex justify-center gap-4">
@@ -672,29 +649,59 @@
             }
         }
 
-        // --- Pemuat Permainan: Kosakata 2 (Cocokkan) ---
+        // --- REVISI BESAR: Pemuat Permainan: Kosakata 2 (Cocokkan 4x4) ---
         let flippedCards = [];
         let matchedPairs = 0;
+        let totalPairs = 8; // 8 pasang untuk grid 4x4
+
         function loadVocabularyGame2() {
             const data = allGameData.kosakata.game2;
             const gameContainer = document.getElementById('game-container');
+            const bankSoal = [...allGameData.kosakata.game1.items]; // Ambil dari bank soal Game 1
+            
+            // 1. Acak bank soal
+            bankSoal.sort(() => Math.random() - 0.5);
+            
+            // 2. Ambil 8 item pertama
+            const selectedItems = bankSoal.slice(0, totalPairs);
+            
+            // 3. Buat 16 kartu (8 pasang)
+            let cards = [];
+            selectedItems.forEach((item, index) => {
+                const pairId = index + 1;
+                cards.push({
+                    id: pairId * 2 - 1,
+                    type: 'img',
+                    content: item.img,
+                    pairId: pairId,
+                    name: item.name // untuk fallback jika gambar error
+                });
+                cards.push({
+                    id: pairId * 2,
+                    type: 'text',
+                    content: item.name,
+                    pairId: pairId,
+                    name: item.name
+                });
+            });
+            
+            // 4. Acak 16 kartu
+            cards.sort(() => Math.random() - 0.5);
+            
+            // 5. Buat HTML
             let cardsHTML = '';
-            
-            // Acak kartu
-            const shuffledItems = data.items.sort(() => Math.random() - 0.5);
-            matchedPairs = 0;
-            
-            shuffledItems.forEach(item => {
+            cards.forEach(item => {
                 cardsHTML += `
-                    <div class="match-card h-28" data-id="${item.id}" data-pair-id="${item.pairId}">
+                    <!-- REVISI: Ukuran kartu lebih kecil untuk grid 4x4, misal h-24 -->
+                    <div class="match-card h-20 md:h-24" data-id="${item.id}" data-pair-id="${item.pairId}">
                         <div class="match-card-inner">
                             <div class="match-card-face match-card-front">
                                 <span class="text-4xl text-white">?</span>
                             </div>
                             <div class="match-card-face match-card-back">
                                 ${item.type === 'img' ? 
-                                    `<img src="${item.content}" alt="gambar" class="w-full h-full object-cover rounded-lg">` : 
-                                    `<span class="text-xl font-semibold p-2">${item.content}</span>`}
+                                    `<img src="${item.content}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML = '<span class=&quot;text-xs p-1&quot;>${item.name} (Image Error)</span>'; this.onerror=null;">` : 
+                                    `<span class="text-base font-semibold p-2 text-center">${item.content}</span>`}
                             </div>
                         </div>
                     </div>
@@ -704,18 +711,25 @@
             gameContainer.innerHTML = `
                 <h3 class="text-2xl font-bold mb-2">${data.title}</h3>
                 <p class="text-gray-600 mb-4">${data.description}</p>
-                <div class="grid grid-cols-4 gap-4">
+                <!-- REVISI: Grid 4x4 -->
+                <div class="grid grid-cols-4 gap-2 md:gap-4">
                     ${cardsHTML}
                 </div>
             `;
             
+            // Reset state
+            flippedCards = [];
+            matchedPairs = 0;
+            
+            // Tambahkan event listener
             document.querySelectorAll('.match-card').forEach(card => {
                 card.addEventListener('click', () => flipCard(card));
             });
         }
         
         function flipCard(card) {
-            if (flippedCards.length < 2 && !card.classList.contains('is-flipped')) {
+            // Jangan biarkan kartu diklik jika sudah dicocokkan (opacity != 1) atau sudah dibalik
+            if (flippedCards.length < 2 && !card.classList.contains('is-flipped') && card.style.opacity !== '0.5') {
                 card.classList.add('is-flipped');
                 flippedCards.push(card);
 
@@ -732,11 +746,11 @@
 
             if (pairId1 === pairId2) {
                 // Cocok
-                card1.style.opacity = '0.5';
+                card1.style.opacity = '0.5'; // Tandai sebagai cocok
                 card2.style.opacity = '0.5';
                 matchedPairs++;
-                if (matchedPairs === allGameData.kosakata.game2.items.length / 2) {
-                    showMessage('Finished!', 'Great job, you matched all cards!', 'Play Again', () => {
+                if (matchedPairs === totalPairs) { // REVISI: Cek jika 8 pasang cocok
+                    showMessage('Finished!', 'Great job, you matched all 8 pairs!', 'Play Again', () => {
                         startGame(selectedFocus, selectedGameType);
                     });
                 }
@@ -763,7 +777,9 @@
             const gameContainer = document.getElementById('game-container');
             
             let optionsHTML = '';
-            item.options.forEach(option => {
+            // Acak opsi jawaban
+            const shuffledOptions = [...item.options].sort(() => Math.random() - 0.5);
+            shuffledOptions.forEach(option => {
                 optionsHTML += `<button class="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold hover:bg-blue-600 mb-2" onclick="checkQuizAnswer('${option}')">${option}</button>`;
             });
 
@@ -771,19 +787,24 @@
                 <h3 class="text-2xl font-bold mb-2">${data.title}</h3>
                 <p class="text-gray-600 mb-4">${data.description}</p>
                 <div class="bg-gray-100 p-4 rounded-lg text-center mb-4">
-                    ${item.context || ''}
+                    <!-- REVISI: Tambahkan 'innerHTML' untuk memformat <br> -->
+                    <div class="mb-2">${item.context ? item.context.replace(/\n/g, '<br>') : ''}</div>
                     <p class="text-xl font-semibold">${item.question}</p>
                 </div>
                 <div class="flex flex-col">
                     ${optionsHTML}
                 </div>
-                <p class="text-center mt-4 font-semibold">Score: ${score}</p>
+                <p class="text-center mt-4 font-semibold">Score: ${score} / ${currentGameData.length}</p>
             `;
         }
         
         function checkQuizAnswer(selectedAnswer) {
             const item = currentGameData[currentQuestionIndex];
-            if (selectedAnswer === item.answer) {
+            // Bersihkan jawaban untuk perbandingan
+            const cleanedSelected = selectedAnswer.replace(/['"]/g, '');
+            const cleanedAnswer = item.answer.replace(/['"]/g, '');
+
+            if (cleanedSelected === cleanedAnswer) {
                 score++;
                 showMessage('Correct!', 'Your answer is correct!', 'Next', () => {
                     currentQuestionIndex++;
@@ -800,9 +821,8 @@
         // --- Pemuat Permainan: Literasi 2 (Susun Dialog) ---
         let userOrder = [];
         function loadLiteracyGame2() {
-            // REVISI: Menggunakan data dari 'allGameData'
             const data = allGameData.literasi.game2; 
-            const item = currentGameData[currentQuestionIndex] || data.items[0]; // Menangani soal pertama atau pengacakan
+            const item = currentGameData[currentQuestionIndex] || data.items[0]; 
             const gameContainer = document.getElementById('game-container');
             userOrder = [];
             
@@ -853,7 +873,7 @@
             }
         }
 
-        // --- Pemuat Permainan: Game 3 (Mengetik) ---
+        // --- Pemuat Permainan: Game 3 & 4 (Mengetik) ---
         function loadTypingGame() {
             if (currentQuestionIndex >= currentGameData.length) {
                 showMessage('Finished!', `Your score: ${score} out of ${currentGameData.length}`, 'Play Again', () => {
@@ -866,20 +886,19 @@
             const data = allGameData[selectedFocus][selectedGameType];
             const gameContainer = document.getElementById('game-container');
 
-            // REVISI 1: Menambahkan pengecekan untuk item.question dan onerror
             gameContainer.innerHTML = `
                 <h3 class="text-2xl font-bold mb-2">${data.title}</h3>
                 <p class="text-gray-600 mb-4">${data.description}</p>
                 <div class="bg-gray-100 p-4 rounded-lg text-center mb-4">
                     ${item.img ? `<img src="${item.img}" alt="game image" class="mx-auto rounded-lg shadow-md mb-4 w-40 h-40 object-cover" onerror="this.src='https://placehold.co/150x150/cccccc/ffffff?text=Image+Error'; this.onerror=null;">` : ''}
-                    ${item.context || ''}
+                    <div class="mb-2">${item.context ? item.context.replace(/\n/g, '<br>') : ''}</div>
                     ${item.question ? `<p class="text-xl font-semibold">${item.question}</p>` : ''}
                 </div>
                 <div class="flex flex-col">
                     <input type="text" id="typing-answer" class="w-full p-3 border border-gray-300 rounded-lg mb-2" placeholder="Type your answer here..." autocomplete="off" autofocus onkeyup="if(event.keyCode === 13) checkTypingAnswer()">
                     <button class="w-full bg-green-500 text-white p-3 rounded-lg font-semibold hover:bg-green-600" onclick="checkTypingAnswer()">Submit Answer</button>
                 </div>
-                <p class="text-center mt-4 font-semibold">Score: ${score}</p>
+                <p class="text-center mt-4 font-semibold">Score: ${score} / ${currentGameData.length}</p>
             `;
             
             // Fokus otomatis ke input field
@@ -890,7 +909,11 @@
             const item = currentGameData[currentQuestionIndex];
             const userAnswer = document.getElementById('typing-answer').value;
             
-            if (userAnswer.toLowerCase().trim() === item.answer.toLowerCase().trim()) {
+            // Perbandingan yang lebih longgar: hilangkan tanda baca dan spasi ekstra
+            const cleanUserAnswer = userAnswer.toLowerCase().trim().replace(/[.,!?]/g, '');
+            const cleanAnswer = item.answer.toLowerCase().trim().replace(/[.,!?]/g, '');
+
+            if (cleanUserAnswer === cleanAnswer) {
                 score++;
                 showMessage('Correct!', 'Your answer is correct!', 'Next', () => {
                     currentQuestionIndex++;
