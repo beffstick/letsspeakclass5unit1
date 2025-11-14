@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Time! - Unit 1</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Menggunakan font Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Latar belakang hijau muda */
+        }
+        
+        /* Menyembunyikan layar secara default */
+        .screen {
+            display: none;
+        }
+        
+        /* Menampilkan layar yang aktif */
+        .screen.active {
+            display: block;
+        }
+
+        /* Styling untuk kartu permainan */
+        .game-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: 100%; /* Membuat kartu sama tinggi */
+            display: flex;
+            flex-direction: column;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .game-card .game-card-content {
+            flex-grow: 1;
+        }
+
+        /* Styling untuk game mencocokkan */
+        .match-card {
+            perspective: 1000px;
+        }
+        .match-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .match-card.is-flipped .match-card-inner {
+            transform: rotateY(180deg);
+        }
+        .match-card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+        }
+        .match-card-front {
+            background-color: #fbbf24; /* Amber */
+        }
+        .match-card-back {
+            background-color: #ffffff;
+            transform: rotateY(180deg);
+            border: 2px solid #fbbf24;
+        }
+
+        /* Styling untuk modal pesan */
+        #message-modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s;
+        }
+        #message-content {
+            animation: slideIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 max-w-4xl min-h-screen flex flex-col justify-center">
+
+        <!-- ===== Layar Menu Utama ===== -->
+        <div id="screen-main-menu" class="screen active text-center">
+            <h1 class="text-4xl font-bold text-green-700 mb-2">Practice Time!</h1>
+            <h2 class="text-2xl font-semibold text-gray-600 mb-8">Unit 1: How Much Is a Kilogram of Carrots?</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Tombol Kosakata -->
+                <button onclick="populateSubMenu('kosakata')" class="game-card bg-blue-500 text-white p-8 rounded-lg shadow-lg">
+                    <span class="text-3xl">🍎</span>
+                    <h3 class="text-2xl font-bold mt-2">Vocabulary</h3>
+                </button>
+                
+                <!-- Tombol Tata Bahasa -->
+                <button onclick="populateSubMenu('tata-bahasa')" class="game-card bg-yellow-500 text-white p-8 rounded-lg shadow-lg">
+                    <span class="text-3xl">📚</span>
+                    <h3 class="text-2xl font-bold mt-2">Grammar</h3>
+                </button>
+                
+                <!-- Tombol Menulis -->
+                <button onclick="populateSubMenu('menulis')" class="game-card bg-red-500 text-white p-8 rounded-lg shadow-lg">
+                    <span class="text-3xl">✏️</span>
+                    <h3 class="text-2xl font-bold mt-2">Writing</h3>
+                </button>
+                
+                <!-- Tombol Literasi -->
+                <button onclick="populateSubMenu('literasi')" class="game-card bg-green-500 text-white p-8 rounded-lg shadow-lg">
+                    <span class="text-3xl">📖</span>
+                    <h3 class="text-2xl font-bold mt-2">Literacy</h3>
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== Layar Sub-Menu (Dinamis) ===== -->
+        <div id="screen-sub-menu" class="screen">
+            <button onclick="showScreen('screen-main-menu')" class="mb-4 text-blue-600 hover:underline">&larr; Back to Main Menu</button>
+            <h2 id="sub-menu-title" class="text-3xl font-bold text-center mb-8"></h2>
+            <!-- REVISI: Grid diubah menjadi 2x2 untuk 4 permainan -->
+            <div id="sub-menu-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Konten diisi oleh JavaScript -->
+            </div>
+        </div>
+
+        <!-- ===== Layar Permainan (Dinamis) ===== -->
+        <div id="screen-game" class="screen">
+            <button onclick="showScreen('screen-sub-menu')" class="mb-4 text-blue-600 hover:underline">&larr; Back to Game Select</button>
+            <div id="game-container" class="bg-white p-6 rounded-lg shadow-xl min-h-[400px]">
+                <!-- Konten permainan diisi oleh JavaScript -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== Modal untuk Pesan Benar/Salah ===== -->
+    <div id="message-modal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div id="message-content" class="bg-white rounded-lg shadow-xl p-6 text-center max-w-sm w-full">
+                <h3 id="message-title" class="text-2xl font-bold"></h3>
+                <p id="message-text" class="text-gray-700 mt-2 mb-6"></p>
+                <button id="message-button" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-600">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // === STATE APLIKASI ===
+        let selectedFocus = '';
+        let selectedGameType = '';
+        let currentGameData = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // Data untuk semua permainan, sekarang dalam Bahasa Inggris dan dengan Game 3
+        const allGameData = {
+            'kosakata': {
+                'game1': {
+                    title: 'Sort Fruits & Veggies',
+                    description: 'Click "Fruit" or "Vegetable" to sort the item.',
+                    // REVISI: Mengganti item agar sesuai dengan daftar kosakata baru
+                    items: [
+                        { name: 'Papaya', type: 'fruit', img: 'https://placehold.co/150x150/f8b400/ffffff?text=Papaya' },
+                        { name: 'Guava', type: 'fruit', img: 'https://placehold.co/150x150/bef264/ffffff?text=Guava' },
+                        { name: 'Mangosteen', type: 'fruit', img: 'https://placehold.co/150x150/6b21a8/ffffff?text=Mangosteen' },
+                        { name: 'Starfruit', type: 'fruit', img: 'https://placehold.co/150x150/facc15/ffffff?text=Starfruit' },
+                        { name: 'Durian', type: 'fruit', img: 'https://placehold.co/150x150/a16207/ffffff?text=Durian' },
+                        { name: 'Grapes', type: 'fruit', img: 'https://placehold.co/150x150/a3e635/ffffff?text=Grapes' },
+                        { name: 'Pineapple', type: 'fruit', img: 'https://placehold.co/150x150/fde047/ffffff?text=Pineapple' },
+                        { name: 'Watermelon', type: 'fruit', img: 'https://placehold.co/150x150/4ade80/ffffff?text=Watermelon' },
+                        { name: 'Avocado', type: 'fruit', img: 'https://placehold.co/150x150/65a30d/ffffff?text=Avocado' },
+                        { name: 'Strawberry', type: 'fruit', img: 'https://placehold.co/150x150/f472b6/ffffff?text=Strawberry' },
+                        { name: 'Rambutan', type: 'fruit', img: 'https://placehold.co/150x150/ef4444/ffffff?text=Rambutan' },
+                        { name: 'Spinach', type: 'vegetable', img: 'https://placehold.co/150x150/22c55e/ffffff?text=Spinach' },
+                        { name: 'Water Spinach', type: 'vegetable', img: 'https://placehold.co/150x150/16a34a/ffffff?text=Water+Spinach' },
+                        { name: 'Chili', type: 'vegetable', img: 'https://placehold.co/150x150/dc2626/ffffff?text=Chili' },
+                        { name: 'Tomato', type: 'vegetable', img: 'https://placehold.co/150x150/ef4444/ffffff?text=Tomato' },
+                        { name: 'Potato', type: 'vegetable', img: 'https://placehold.co/150x150/ca8a04/ffffff?text=Potato' },
+                        { name: 'Cauliflower', type: 'vegetable', img: 'https://placehold.co/150x150/f1f5f9/000000?text=Cauliflower' },
+                        { name: 'Cabbage', type: 'vegetable', img: 'https://placehold.co/150x150/86efac/ffffff?text=Cabbage' },
+                    ]
+                },
+                'game2': {
+                    title: 'Match Picture & Word',
+                    description: 'Flip the cards and find the matching pairs.',
+                    // REVISI: Mengganti item agar sesuai dengan daftar kosakata baru
+                    items: [ 
+                        { id: 1, type: 'img', content: 'https://placehold.co/100x100/f8b400/ffffff?text=Papaya', pairId: 1 },
+                        { id: 2, type: 'text', content: 'Papaya', pairId: 1 },
+                        { id: 3, type: 'img', content: 'https://placehold.co/100x100/dc2626/ffffff?text=Chili', pairId: 2 },
+                        { id: 4, type: 'text', content: 'Chili', pairId: 2 },
+                        { id: 5, type: 'img', content: 'https://placehold.co/100x100/ca8a04/ffffff?text=Potato', pairId: 3 },
+                        { id: 6, type: 'text', content: 'Potato', pairId: 3 },
+                        { id: 7, type: 'img', content: 'https://placehold.co/100x100/a3e635/ffffff?text=Grapes', pairId: 4 },
+                        { id: 8, type: 'text', content: 'Grapes', pairId: 4 },
+                    ]
+                },
+                'game3': {
+                    title: 'Type the Word',
+                    description: 'Look at the image and type the correct English word.',
+                    // REVISI: Mengganti 5 gambar dan jawaban dengan URL yang Anda berikan
+                    items: [
+                        { img: 'https://www.dreamfoodscaribe.com/wp-content/uploads/2024/07/papaya-fruit.webp', answer: 'papaya' },
+                        { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Guava_pink_fruit.jpg/1024px-Guava_pink_fruit.jpg', answer: 'guava' },
+                        { img: 'https://cdn.wikifarmer.com/images/detailed/2024/09/art-rachen-PU-WX8hdiqw-unsplash.jpg', answer: 'mangosteen' },
+                        { img: 'https://www.marthastewart.com/thmb/Sgnte8iP-m4nUdSIfKn2kNIATEU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/ms-star-fruit-getty-70039cdd11624035905ba762496d8c46.jpg', answer: 'starfruit' },
+                        { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Durian_in_black.jpg/500px-Durian_in_black.jpg', answer: 'durian' }
+                    ]
+                },
+                // REVISI: Menambahkan Game 4 untuk Kosakata
+                'game4': {
+                    title: 'Dialogue: Fill the Blank',
+                    description: 'Read the dialogue and type the missing vocabulary word.',
+                    items: [
+                        { context: 'A: "Do you like ___?"<br>B: "Yes, it\'s my favorite fruit." (Hint: It\'s red and has seeds on the outside)', answer: 'strawberry' },
+                        { context: 'A: "How much is a ___ of spinach?"<br>B: "It\'s Rp 5.000."', answer: 'bunch' },
+                        { context: 'A: "What vegetable do you want?"<br>B: "I want one ___ to make french fries."', answer: 'potato' },
+                        { context: 'A: "This fruit is yellow and sour."<br>B: "Oh, I know! It\'s a ___!"', answer: 'starfruit' },
+                        { context: 'A: "I need a ___ of papayas, please."<br>B: "One kilogram coming up!"', answer: 'kilogram' }
+                    ]
+                }
+            },
+            'tata-bahasa': {
+                'game1': {
+                    title: 'Singular or Plural?',
+                    description: 'Choose the correct form of the word to complete the sentence.',
+                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
+                    items: [
+                        { question: 'I have one ___', options: ['papaya', 'papayas'], answer: 'papaya' },
+                        { question: 'She needs two ___', options: ['potato', 'potatoes'], answer: 'potatoes' },
+                        { question: 'He buys a ___', options: ['mangosteen', 'mangosteens'], answer: 'mangosteen' },
+                        { question: 'We eat five ___', options: ['strawberry', 'strawberries'], answer: 'strawberries' },
+                        { question: 'My mom wants some ___', options: ['spinach', 'spinaches'], answer: 'spinach' }, 
+                        { question: 'They see three ___', options: ['tomato', 'tomatoes'], answer: 'tomatoes' }
+                    ]
+                },
+                'game2': {
+                    title: 'Like or Likes?',
+                    description: 'Complete the sentence with "like" or "likes".',
+                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
+                    items: [
+                        { question: 'I ___ guavas.', options: ['like', 'likes'], answer: 'like' },
+                        { question: 'He ___ spinach.', options: ['like', 'likes'], answer: 'likes' },
+                        { question: 'She ___ strawberries.', options: ['like', 'likes'], answer: 'likes' },
+                        { question: 'We ___ durian.', options: ['like', 'likes'], answer: 'like' },
+                        { question: 'They ___ papayas.', options: ['like', 'likes'], answer: 'like' },
+                        { question: 'My father ___ starfruit.', options: ['like', 'likes'], answer: 'likes' }
+                    ]
+                },
+                'game3': {
+                    title: 'Fill in the Blank (S/Plural)',
+                    description: 'Type the correct form of the word in parentheses.',
+                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
+                    items: [
+                        { question: 'I need two (potato).', answer: 'potatoes' },
+                        { question: 'She wants one (guava).', answer: 'guava' },
+                        { question: 'He buys three (tomato).', answer: 'tomatoes' },
+                        { question: 'They eat five (strawberry).', answer: 'strawberries' },
+                        { question: 'I see a (mangosteen).', answer: 'mangosteen' }
+                    ]
+                },
+                // REVISI: Menambahkan Game 4 untuk Tata Bahasa
+                'game4': {
+                    title: 'Dialogue: Grammar Quiz',
+                    description: 'Choose the correct grammar to complete the dialogue.',
+                    items: [
+                        { 
+                            context: 'Buyer: "How ___ is one kilogram of potatoes?"<br>Seller: "It\'s Rp 12.000."',
+                            question: 'Choose the correct word:',
+                            options: ['much', 'many', 'long'],
+                            answer: 'much'
+                        },
+                        { 
+                            context: 'A: "___ you like durian?"<br>B: "No, I don\'t."',
+                            question: 'Choose the correct word:',
+                            options: ['Do', 'Does', 'Are'],
+                            answer: 'Do'
+                        },
+                        { 
+                            context: 'A: "My mother ___ starfruit."<br>B: "Oh, I like it too!"',
+                            question: 'Choose the correct word:',
+                            options: ['like', 'likes', 'is liking'],
+                            answer: 'likes'
+                        },
+                        { 
+                            context: 'Buyer: "I want two ___."<br>Seller: "Two papayas, okay!"',
+                            question: 'Choose the correct word:',
+                            options: ['papaya', 'papayas', 'papayaes'],
+                            answer: 'papayas'
+                        }
+                    ]
+                }
+            },
+            'menulis': {
+                'game1': {
+                    title: 'Shopping List Quantifiers',
+                    description: 'Choose the correct quantifier.',
+                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
+                    items: [
+                        { question: 'A ___ of spinach.', options: ['kilogram', 'bunch', 'pack'], answer: 'bunch' },
+                        { question: 'Two ___ of potatoes.', options: ['kilograms', 'bunch', 'pack'], answer: 'kilograms' },
+                        { question: 'A ___ of chili.', options: ['kilogram', 'bunch', 'pack'], answer: 'pack' },
+                        { question: 'I need a ___ of pineapple.', options: ['kilogram', 'bunch', 'pack'], answer: 'kilogram' }
+                    ]
+                },
+                'game2': {
+                    title: 'Complete the Dialogue',
+                    description: 'Choose the correct response to complete the market dialogue.',
+                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
+                    items: [
+                        {
+                            context: 'Seller: "Hello, can I help you?"<br>Buyer: "Yes, please. I want ___." ',
+                            options: ['some pineapples', 'I am fine', 'My name is Budi'],
+                            answer: 'some pineapples'
+                        },
+                        {
+                            context: 'Seller: "Here you are. Anything else?"<br>Buyer: "How ___ is one kilogram of guavas?"',
+                            options: ['many', 'much', 'old'],
+                            answer: 'much'
+                        },
+                        {
+                            context: 'Seller: "It\'s Rp 10.000 (ten thousand)."<br>Buyer: "Okay, I\'ll take one kilogram. ___."',
+                            options: ['You are welcome', 'Thank you', 'Good morning'],
+                            answer: 'Thank you'
+                        }
+                    ]
+                },
+                'game3': {
+                    title: 'Fill in the Blank (Units)',
+                    description: 'Type the correct unit: a __ of... (bunch, kilogram, pack).',
+                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
+                    items: [
+                        { question: 'A ___ of spinach.', answer: 'bunch' },
+                        { question: 'A ___ of potatoes.', answer: 'kilogram' },
+                        { question: 'A ___ of chili.', answer: 'pack' },
+                        { question: 'I want a ___ of pineapples, please.', answer: 'kilogram' }
+                    ]
+                },
+                // REVISI: Menambahkan Game 4 untuk Menulis
+                'game4': {
+                    title: 'Dialogue: Write the Line',
+                    description: 'Read the prompt and type the correct sentence.',
+                    items: [
+                        {
+                            context: 'Seller: "Hello, can I help you?"',
+                            question: 'Prompt: Say "Yes" and ask for "some strawberries".',
+                            answer: 'Yes, I want some strawberries.'
+                        },
+                        {
+                            context: 'Buyer: "I want some guavas."<br>Seller: "Okay. Anything else?"',
+                            question: 'Prompt: Say "No" and "Thank you".',
+                            answer: 'No, thank you.'
+                        },
+                        {
+                            context: 'Buyer: "___?"<br>Seller: "It is Rp 10.000 per kilogram."',
+                            question: 'Prompt: Ask for the price of "one kilogram of grapes".',
+                            answer: 'How much is one kilogram of grapes?'
+                        }
+                    ]
+                }
+            },
+            'literasi': {
+                'game1': {
+                    title: 'Reading Price Tags',
+                    description: 'Look at the price tag, then answer the question.',
+                    // REVISI: Mengganti soal agar sesuai dengan daftar kosakata baru
+                    items: [
+                        { 
+                            context: '<div class="bg-yellow-200 border-2 border-yellow-400 p-4 rounded-lg text-center"><h4 class="text-xl font-bold">FRESH POTATOES</h4><p class="text-3xl font-bold text-red-600">Rp 12.000 / kg</p></div>',
+                            question: 'How much is one kilogram of potatoes?',
+                            options: ['Rp 10.000', 'Rp 12.000', 'Rp 20.000'],
+                            answer: 'Rp 12.000'
+                        },
+                        { 
+                            context: '<div class="bg-yellow-200 border-2 border-yellow-400 p-4 rounded-lg text-center"><h4 class="text-xl font-bold">FRESH STRAWBERRIES</h4><p class="text-3xl font-bold text-red-600">Rp 15.000 / kg</p></div>',
+                            question: 'How much are TWO kilograms of strawberries?',
+                            options: ['Rp 15.000', 'Rp 20.000', 'Rp 30.000'],
+                            answer: 'Rp 30.000'
+                        }
+                    ]
+                },
+                // REVISI: Menambahkan Game 4 untuk Literasi
+                'game4': {
+                    title: 'Dialogue: Comprehension',
+                    description: 'Read the dialogue, then answer the comprehension question.',
+                    items: [
+                        { 
+                            context: '<b>Seller:</b> "Hello! Can I help you?"<br><b>Buyer:</b> "Yes, please. I want two kilograms of <b>papayas</b>."<br><b>Seller:</b> "Okay. Anything else?"<br><b>Buyer:</b> "How much is one bunch of <b>spinach</b>?"<br><b>Seller:</b> "It\'s <b>Rp 5.000</b>."',
+                            question: 'What fruit does the buyer want?',
+                            options: ['Spinach', 'Papayas', 'Durian'],
+                            answer: 'Papayas'
+                        },
+                        { 
+                            context: '<b>Seller:</b> "Hello! Can I help you?"<br><b>Buyer:</b> "Yes, please. I want two kilograms of <b>papayas</b>."<br><b>Seller:</b> "Okay. Anything else?"<br><b>Buyer:</b> "How much is one bunch of <b>spinach</b>?"<br><b>Seller:</b> "It\'s <b>Rp 5.000</b>."',
+                            question: 'How much is the spinach?',
+                            options: ['Rp 5.000', 'Rp 2.000', 'Rp 10.000'],
+                            answer: 'Rp 5.000'
+                        },
+                        { 
+                            context: '<b>A:</b> "I like strawberries and grapes."<br><b>B:</b> "I don\'t like grapes, but I like <b>mangosteen</b>."<br><b>A:</b> "Does your father like mangosteen?"<br><b>B:</b> "No, he likes <b>durian</b>."',
+                            question: 'What fruit does B like?',
+                            options: ['Grapes', 'Durian', 'Mangosteen'],
+                            answer: 'Mangosteen'
+                        },
+                        { 
+                            context: '<b>A:</b> "I like strawberries and grapes."<br><b>B:</b> "I don\'t like grapes, but I like <b>mangosteen</b>."<br><b>A:</b> "Does your father like mangosteen?"<br><b>B:</b> "No, he likes <b>durian</b>."',
+                            question: 'What fruit does B\'s father like?',
+                            options: ['Durian', 'Mangosteen', 'Strawberries'],
+                            answer: 'Durian'
+                        }
+                    ]
+                }
+            }
+        };
+
+        // === FUNGSI NAVIGASI ===
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function populateSubMenu(focus) {
+            selectedFocus = focus;
+            const focusData = allGameData[focus];
+            const container = document.getElementById('sub-menu-container');
+            const title = document.getElementById('sub-menu-title');
+            
+            let focusTitle = '';
+            let cardColor = '';
+            
+            // Atur judul dan warna berdasarkan fokus
+            switch(focus) {
+                case 'kosakata':
+                    focusTitle = '🍎 Vocabulary';
+                    cardColor = 'bg-blue-500';
+                    break;
+                case 'tata-bahasa':
+                    focusTitle = '📚 Grammar';
+                    cardColor = 'bg-yellow-500';
+                    break;
+                case 'menulis':
+                    focusTitle = '✏️ Writing';
+                    cardColor = 'bg-red-500';
+                    break;
+                case 'literasi':
+                    focusTitle = '📖 Literacy';
+                    cardColor = 'bg-green-500';
+                    break;
+            }
+            title.innerText = focusTitle;
+            
+            // REVISI: Buat tombol untuk 4 permainan
+            container.innerHTML = `
+                <button onclick="startGame('${focus}', 'game1')" class="game-card ${cardColor} text-white p-6 rounded-lg shadow-lg text-left">
+                    <div class="game-card-content">
+                        <h3 class="text-xl font-bold">Game 1:</h3>
+                        <p class="text-lg">${focusData.game1.title}</p>
+                    </div>
+                    <p class="text-sm opacity-90 mt-2">${focusData.game1.description}</p>
+                </button>
+                <button onclick="startGame('${focus}', 'game2')" class="game-card ${cardColor} text-white p-6 rounded-lg shadow-lg text-left">
+                    <div class="game-card-content">
+                        <h3 class="text-xl font-bold">Game 2:</h3>
+                        <p class="text-lg">${focusData.game2.title}</p>
+                    </div>
+                    <p class="text-sm opacity-90 mt-2">${focusData.game2.description}</p>
+                </button>
+                <button onclick="startGame('${focus}', 'game3')" class="game-card bg-gray-700 text-white p-6 rounded-lg shadow-lg text-left">
+                    <div class="game-card-content">
+                        <h3 class="text-xl font-bold">Game 3 (Hard):</h3>
+                        <p class="text-lg">${focusData.game3.title}</p>
+                    </div>
+                    <p class="text-sm opacity-90 mt-2">${focusData.game3.description}</p>
+                </button>
+                <!-- Tombol Game 4 Baru -->
+                <button onclick="startGame('${focus}', 'game4')" class="game-card bg-purple-600 text-white p-6 rounded-lg shadow-lg text-left">
+                    <div class="game-card-content">
+                        <h3 class="text-xl font-bold">Game 4 (Dialogue):</h3>
+                        <p class="text-lg">${focusData.game4.title}</p>
+                    </div>
+                    <p class="text-sm opacity-90 mt-2">${focusData.game4.description}</p>
+                </button>
+            `;
+            
+            showScreen('screen-sub-menu');
+        }
+
+        // === FUNGSI MODAL PESAN ===
+
+        function showMessage(title, text, buttonText = 'Continue', onButtonClick = null) {
+            document.getElementById('message-title').innerText = title;
+            document.getElementById('message-text').innerText = text;
+            document.getElementById('message-button').innerText = buttonText;
+            
+            const messageButton = document.getElementById('message-button');
+            // Hapus event listener lama dan tambahkan yang baru
+            const newButton = messageButton.cloneNode(true);
+            messageButton.parentNode.replaceChild(newButton, messageButton);
+
+            newButton.addEventListener('click', () => {
+                document.getElementById('message-modal').style.display = 'none';
+                if (onButtonClick) {
+                    onButtonClick();
+                }
+            });
+
+            document.getElementById('message-modal').style.display = 'flex';
+        }
+
+
+        // === FUNGSI UTAMA PERMAINAN ===
+
+        function startGame(focus, gameType) {
+            selectedGameType = gameType;
+            // REVISI: Logika randomisasi yang lebih baik untuk replayability
+            // Mengacak data permainan jika perlu
+            if (`${focus}-${gameType}` !== 'literasi-game2') { // Jangan acak game susun dialog
+                // Buat salinan acak dari data untuk memastikan permainan selalu baru
+                currentGameData = [...allGameData[focus][gameType].items].sort(() => Math.random() - 0.5);
+            } else {
+                // Untuk game susun dialog, jangan acak urutan soal (jika ada > 1)
+                currentGameData = allGameData[focus][gameType].items;
+            }
+            
+            currentQuestionIndex = 0;
+            score = 0;
+
+            // Memanggil fungsi pemuat permainan yang sesuai
+            switch (`${focus}-${gameType}`) {
+                case 'kosakata-game1':
+                    loadVocabularyGame1();
+                    break;
+                case 'kosakata-game2':
+                    loadVocabularyGame2();
+                    break;
+                case 'tata-bahasa-game1':
+                case 'tata-bahasa-game2':
+                case 'menulis-game1':
+                case 'menulis-game2':
+                case 'literasi-game1':
+                // REVISI: Tambahkan game kuis baru ke loader
+                case 'tata-bahasa-game4':
+                case 'literasi-game4':
+                    loadQuizGame(); // Banyak game berbagi struktur kuis yang sama
+                    break;
+                case 'literasi-game2':
+                    loadLiteracyGame2();
+                    break;
+                // Kasus baru untuk game 3 (mengetik)
+                case 'kosakata-game3':
+                case 'tata-bahasa-game3':
+                case 'menulis-game3':
+                case 'literasi-game3':
+                // REVISI: Tambahkan game mengetik baru ke loader
+                case 'kosakata-game4':
+                case 'menulis-game4':
+                    loadTypingGame();
+                    break;
+            }
+            showScreen('screen-game');
+        }
+
+        // --- Pemuat Permainan: Kosakata 1 (Sortir) ---
+        function loadVocabularyGame1() {
+            if (currentQuestionIndex >= currentGameData.length) {
+                showMessage('Finished!', `Great job! You sorted ${currentGameData.length} items.`, 'Play Again', () => {
+                    startGame(selectedFocus, selectedGameType);
+                });
+                return;
+            }
+            
+            const item = currentGameData[currentQuestionIndex];
+            const data = allGameData.kosakata.game1;
+
+            gameContainer.innerHTML = `
+                <h3 class="text-2xl font-bold mb-2">${data.title}</h3>
+                <p class="text-gray-600 mb-4">${data.description}</p>
+                <div class="text-center">
+                    <img src="${item.img}" alt="${item.name}" class="mx-auto rounded-lg shadow-md mb-4 w-40 h-40 object-cover">
+                    <p class="text-xl font-semibold mb-4">This is "${item.name}"</p>
+                    <p class="mb-4">What group is it in?</p>
+                    <div class="flex justify-center gap-4">
+                        <button id="fruit-btn" class="bg-red-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-red-600">🍎 Fruit</button>
+                        <button id="veg-btn" class="bg-green-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-green-600">🥕 Vegetable</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('fruit-btn').onclick = () => checkVocabularySort('fruit');
+            document.getElementById('veg-btn').onclick = () => checkVocabularySort('vegetable');
+        }
+        
+        function checkVocabularySort(selectedType) {
+            const item = currentGameData[currentQuestionIndex];
+            if (item.type === selectedType) {
+                showMessage('Correct!', `${item.name} is a ${selectedType}.`, 'Next', () => {
+                    currentQuestionIndex++;
+                    loadVocabularyGame1();
+                });
+            } else {
+                showMessage('Incorrect!', `Try again. ${item.name} is a ${item.type}.`, 'Next', () => {
+                    currentQuestionIndex++;
+                    loadVocabularyGame1();
+                });
+            }
+        }
+
+        // --- Pemuat Permainan: Kosakata 2 (Cocokkan) ---
+        let flippedCards = [];
+        let matchedPairs = 0;
+        function loadVocabularyGame2() {
+            const data = allGameData.kosakata.game2;
+            const gameContainer = document.getElementById('game-container');
+            let cardsHTML = '';
+            
+            // Acak kartu
+            const shuffledItems = data.items.sort(() => Math.random() - 0.5);
+            matchedPairs = 0;
+            
+            shuffledItems.forEach(item => {
+                cardsHTML += `
+                    <div class="match-card h-28" data-id="${item.id}" data-pair-id="${item.pairId}">
+                        <div class="match-card-inner">
+                            <div class="match-card-face match-card-front">
+                                <span class="text-4xl text-white">?</span>
+                            </div>
+                            <div class="match-card-face match-card-back">
+                                ${item.type === 'img' ? 
+                                    `<img src="${item.content}" alt="gambar" class="w-full h-full object-cover rounded-lg">` : 
+                                    `<span class="text-xl font-semibold p-2">${item.content}</span>`}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            gameContainer.innerHTML = `
+                <h3 class="text-2xl font-bold mb-2">${data.title}</h3>
+                <p class="text-gray-600 mb-4">${data.description}</p>
+                <div class="grid grid-cols-4 gap-4">
+                    ${cardsHTML}
+                </div>
+            `;
+            
+            document.querySelectorAll('.match-card').forEach(card => {
+                card.addEventListener('click', () => flipCard(card));
+            });
+        }
+        
+        function flipCard(card) {
+            if (flippedCards.length < 2 && !card.classList.contains('is-flipped')) {
+                card.classList.add('is-flipped');
+                flippedCards.push(card);
+
+                if (flippedCards.length === 2) {
+                    setTimeout(checkMatch, 1000);
+                }
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            const pairId1 = card1.dataset.pairId;
+            const pairId2 = card2.dataset.pairId;
+
+            if (pairId1 === pairId2) {
+                // Cocok
+                card1.style.opacity = '0.5';
+                card2.style.opacity = '0.5';
+                matchedPairs++;
+                if (matchedPairs === allGameData.kosakata.game2.items.length / 2) {
+                    showMessage('Finished!', 'Great job, you matched all cards!', 'Play Again', () => {
+                        startGame(selectedFocus, selectedGameType);
+                    });
+                }
+            } else {
+                // Tidak cocok
+                card1.classList.remove('is-flipped');
+                card2.classList.remove('is-flipped');
+            }
+            flippedCards = [];
+        }
+
+
+        // --- Pemuat Permainan: Kuis Umum (Tata Bahasa, Menulis, Literasi 1) ---
+        function loadQuizGame() {
+            if (currentQuestionIndex >= currentGameData.length) {
+                showMessage('Finished!', `Your score: ${score} out of ${currentGameData.length}`, 'Play Again', () => {
+                    startGame(selectedFocus, selectedGameType);
+                });
+                return;
+            }
+
+            const item = currentGameData[currentQuestionIndex];
+            const data = allGameData[selectedFocus][selectedGameType];
+            const gameContainer = document.getElementById('game-container');
+            
+            let optionsHTML = '';
+            item.options.forEach(option => {
+                optionsHTML += `<button class="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold hover:bg-blue-600 mb-2" onclick="checkQuizAnswer('${option}')">${option}</button>`;
+            });
+
+            gameContainer.innerHTML = `
+                <h3 class="text-2xl font-bold mb-2">${data.title}</h3>
+                <p class="text-gray-600 mb-4">${data.description}</p>
+                <div class="bg-gray-100 p-4 rounded-lg text-center mb-4">
+                    ${item.context || ''}
+                    <p class="text-xl font-semibold">${item.question}</p>
+                </div>
+                <div class="flex flex-col">
+                    ${optionsHTML}
+                </div>
+                <p class="text-center mt-4 font-semibold">Score: ${score}</p>
+            `;
+        }
+        
+        function checkQuizAnswer(selectedAnswer) {
+            const item = currentGameData[currentQuestionIndex];
+            if (selectedAnswer === item.answer) {
+                score++;
+                showMessage('Correct!', 'Your answer is correct!', 'Next', () => {
+                    currentQuestionIndex++;
+                    loadQuizGame();
+                });
+            } else {
+                showMessage('Incorrect!', `The correct answer is "${item.answer}".`, 'Next', () => {
+                    currentQuestionIndex++;
+                    loadQuizGame();
+                });
+            }
+        }
+        
+        // --- Pemuat Permainan: Literasi 2 (Susun Dialog) ---
+        let userOrder = [];
+        function loadLiteracyGame2() {
+            const data = allGameData.literasi.game2;
+            const item = data.items[0]; // Hanya ada 1 set dialog
+            const gameContainer = document.getElementById('game-container');
+            userOrder = [];
+            
+            let linesHTML = '';
+            const shuffledLines = [...item.lines].sort(() => Math.random() - 0.5);
+            shuffledLines.forEach(line => {
+                linesHTML += `<button class="w-full bg-gray-200 p-3 rounded-lg hover:bg-gray-300 mb-2 text-left" data-id="${line.id}" onclick="selectDialogueLine(this)">${line.text}</button>`;
+            });
+
+            gameContainer.innerHTML = `
+                <h3 class="text-2xl font-bold mb-2">${data.title}</h3>
+                <p class="text-gray-600 mb-4">${data.description}</p>
+                <div class="mb-4">
+                    <p class="font-semibold">Your Order:</p>
+                    <div id="dialogue-result" class="bg-gray-100 p-3 rounded-lg min-h-[100px] border">
+                        <!-- Pilihan siswa akan muncul di sini -->
+                    </div>
+                </div>
+                <div id="dialogue-options">
+                    ${linesHTML}
+                </div>
+                <button class="w-full bg-green-500 text-white p-3 rounded-lg font-semibold hover:bg-green-600 mt-4" onclick="checkDialogueOrder()">Check Answer</button>
+            `;
+        }
+        
+        function selectDialogueLine(button) {
+            const lineId = parseInt(button.dataset.id);
+            const lineText = button.innerText;
+            
+            userOrder.push(lineId);
+            document.getElementById('dialogue-result').innerHTML += `<p class="p-1 bg-white border rounded mb-1">${lineText}</p>`;
+            button.disabled = true;
+            button.style.opacity = '0.5';
+        }
+
+        function checkDialogueOrder() {
+            const answer = allGameData.literasi.game2.items[0].answerOrder;
+            let isCorrect = userOrder.length === answer.length && userOrder.every((val, index) => val === answer[index]);
+            
+            if (isCorrect) {
+                showMessage('Correct!', 'The dialogue order is perfect!', 'Play Again', () => {
+                    startGame(selectedFocus, selectedGameType);
+                });
+            } else {
+                showMessage('Incorrect!', 'That order is not correct. Try again.', 'Try Again', () => {
+                    loadLiteracyGame2(); // Reset permainan
+                });
+            }
+        }
+
+        // --- Pemuat Permainan: Game 3 (Mengetik) ---
+        function loadTypingGame() {
+            if (currentQuestionIndex >= currentGameData.length) {
+                showMessage('Finished!', `Your score: ${score} out of ${currentGameData.length}`, 'Play Again', () => {
+                    startGame(selectedFocus, selectedGameType);
+                });
+                return;
+            }
+
+            const item = currentGameData[currentQuestionIndex];
+            const data = allGameData[selectedFocus][selectedGameType];
+            const gameContainer = document.getElementById('game-container');
+
+            // REVISI 1: Menambahkan pengecekan untuk item.question dan onerror
+            gameContainer.innerHTML = `
+                <h3 class="text-2xl font-bold mb-2">${data.title}</h3>
+                <p class="text-gray-600 mb-4">${data.description}</p>
+                <div class="bg-gray-100 p-4 rounded-lg text-center mb-4">
+                    ${item.img ? `<img src="${item.img}" alt="game image" class="mx-auto rounded-lg shadow-md mb-4 w-40 h-40 object-cover" onerror="this.src='https://placehold.co/150x150/cccccc/ffffff?text=Image+Error'; this.onerror=null;">` : ''}
+                    ${item.context || ''}
+                    ${item.question ? `<p class="text-xl font-semibold">${item.question}</p>` : ''}
+                </div>
+                <div class="flex flex-col">
+                    <input type="text" id="typing-answer" class="w-full p-3 border border-gray-300 rounded-lg mb-2" placeholder="Type your answer here..." autocomplete="off" autofocus onkeyup="if(event.keyCode === 13) checkTypingAnswer()">
+                    <button class="w-full bg-green-500 text-white p-3 rounded-lg font-semibold hover:bg-green-600" onclick="checkTypingAnswer()">Submit Answer</button>
+                </div>
+                <p class="text-center mt-4 font-semibold">Score: ${score}</p>
+            `;
+            
+            // Fokus otomatis ke input field
+            setTimeout(() => document.getElementById('typing-answer').focus(), 100);
+        }
+
+        function checkTypingAnswer() {
+            const item = currentGameData[currentQuestionIndex];
+            const userAnswer = document.getElementById('typing-answer').value;
+            
+            if (userAnswer.toLowerCase().trim() === item.answer.toLowerCase().trim()) {
+                score++;
+                showMessage('Correct!', 'Your answer is correct!', 'Next', () => {
+                    currentQuestionIndex++;
+                    loadTypingGame();
+                });
+            } else {
+                showMessage('Incorrect!', `The correct answer is "${item.answer}".`, 'Next', () => {
+                    currentQuestionIndex++;
+                    loadTypingGame();
+                });
+            }
+        }
+
+        // === INISIALISASI ===
+        // Tampilkan layar menu utama saat pertama kali dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            showScreen('screen-main-menu');
+        });
+
+    </script>
+</body>
+</html>
