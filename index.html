@@ -19,7 +19,7 @@
             display: none;
         }
         
-        /* Menampilkan layar yang aktif */
+        /* Menampilkan layar yangaktif */
         .screen.active {
             display: block;
         }
@@ -73,6 +73,15 @@
             background-color: #ffffff;
             transform: rotateY(180deg);
             border: 2px solid #fbbf24;
+        }
+        
+        /* REVISI: Style untuk item dialog yang bisa diklik */
+        .dialogue-item {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .dialogue-item:hover {
+            background-color: #fde2e2; /* Merah muda muda saat hover */
         }
 
         /* Styling untuk modal pesan */
@@ -216,7 +225,7 @@
                 'game3': {
                     title: 'Type the Word',
                     description: 'Look at the image and type the correct English word.',
-                    // REVISI: Menggunakan 5 gambar pertama dari daftar Anda
+                    // REVISI: Menggunakan 7 gambar dari daftar Anda
                     items: [
                         { img: 'https://www.dreamfoodscaribe.com/wp-content/uploads/2024/07/papaya-fruit.webp', answer: 'papaya' },
                         { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Guava_pink_fruit.jpg/1024px-Guava_pink_fruit.jpg', answer: 'guava' },
@@ -391,7 +400,7 @@
                 },
                 'game2': {
                     title: 'Order the Dialogue',
-                    description: 'Click the sentences below to put them in the correct order.',
+                    description: 'Click the sentences below to put them in the correct order. Click an item in "Your Order" to remove it.',
                     items: [
                         { 
                             lines: [
@@ -788,7 +797,7 @@
                 <p class="text-gray-600 mb-4">${data.description}</p>
                 <div class="bg-gray-100 p-4 rounded-lg text-center mb-4">
                     <!-- REVISI: Tambahkan 'innerHTML' untuk memformat <br> -->
-                    <div class="mb-2">${item.context ? item.context.replace(/\n/g, '<br>') : ''}</div>
+                    <div class="mb-2" style="white-space: pre-wrap;">${item.context || ''}</div>
                     <p class="text-xl font-semibold">${item.question}</p>
                 </div>
                 <div class="flex flex-col">
@@ -818,7 +827,7 @@
             }
         }
         
-        // --- Pemuat Permainan: Literasi 2 (Susun Dialog) ---
+        // --- REVISI: Pemuat Permainan: Literasi 2 (Susun Dialog) ---
         let userOrder = [];
         function loadLiteracyGame2() {
             const data = allGameData.literasi.game2; 
@@ -836,7 +845,7 @@
                 <h3 class="text-2xl font-bold mb-2">${data.title}</h3>
                 <p class="text-gray-600 mb-4">${data.description}</p>
                 <div class="mb-4">
-                    <p class="font-semibold">Your Order:</p>
+                    <p class="font-semibold">Your Order: (Click to remove)</p>
                     <div id="dialogue-result" class="bg-gray-100 p-3 rounded-lg min-h-[100px] border">
                         <!-- Pilihan siswa akan muncul di sini -->
                     </div>
@@ -853,9 +862,38 @@
             const lineText = button.innerText;
             
             userOrder.push(lineId);
-            document.getElementById('dialogue-result').innerHTML += `<p class="p-1 bg-white border rounded mb-1">${lineText}</p>`;
-            button.disabled = true;
-            button.style.opacity = '0.5';
+            
+            // REVISI: Buat elemen baru yang bisa diklik untuk "deselect"
+            const newOrderItem = document.createElement('div');
+            newOrderItem.classList.add('p-2', 'bg-white', 'border', 'rounded', 'mb-1', 'dialogue-item');
+            newOrderItem.innerText = lineText;
+            newOrderItem.setAttribute('data-id', lineId);
+            newOrderItem.onclick = () => deselectDialogueLine(newOrderItem);
+            
+            document.getElementById('dialogue-result').appendChild(newOrderItem);
+            
+            // Sembunyikan tombol pilihan asli
+            button.style.display = 'none';
+        }
+
+        // REVISI: Fungsi baru untuk membatalkan pilihan
+        function deselectDialogueLine(element) {
+            const lineId = parseInt(element.dataset.id);
+            
+            // 1. Hapus dari array userOrder
+            const indexToRemove = userOrder.indexOf(lineId);
+            if (indexToRemove > -1) {
+                userOrder.splice(indexToRemove, 1);
+            }
+            
+            // 2. Hapus elemen dari kotak "Your Order"
+            element.remove();
+            
+            // 3. Tampilkan kembali tombol di daftar pilihan
+            const originalButton = document.querySelector(`#dialogue-options button[data-id="${lineId}"]`);
+            if (originalButton) {
+                originalButton.style.display = 'block';
+            }
         }
 
         function checkDialogueOrder() {
@@ -891,7 +929,7 @@
                 <p class="text-gray-600 mb-4">${data.description}</p>
                 <div class="bg-gray-100 p-4 rounded-lg text-center mb-4">
                     ${item.img ? `<img src="${item.img}" alt="game image" class="mx-auto rounded-lg shadow-md mb-4 w-40 h-40 object-cover" onerror="this.src='https://placehold.co/150x150/cccccc/ffffff?text=Image+Error'; this.onerror=null;">` : ''}
-                    <div class="mb-2">${item.context ? item.context.replace(/\n/g, '<br>') : ''}</div>
+                    <div class="mb-2" style="white-space: pre-wrap;">${item.context || ''}</div>
                     ${item.question ? `<p class="text-xl font-semibold">${item.question}</p>` : ''}
                 </div>
                 <div class="flex flex-col">
